@@ -1,5 +1,5 @@
 {
-  "name": "@falcondev-it/nuxt-sentry",
+  "name": "@binaryoverload/nuxt-sentry",
   "version": "0.1.0",
   "description": "Nuxt 3 module for Sentry",
   "repository": "https://github.com/falcondev-it/nuxt-sentry",
