@@ -39,6 +39,30 @@ export default defineNuxtConfig({
 
 That's it! You can now use Nuxt Sentry in your Nuxt app ✨
 
+## Configuration
+
+The module can be configured by providing a `sentry` key in the `public` section of the `runtimeConfig` or `appConfig` in `nuxt.config.ts`.
+
+The `sdk` object is passed directly to the Sentry SDK. It consists of the properties specified in the [Sentry documentation here](https://docs.sentry.io/platforms/javascript/configuration/options/).
+
+Runtime config:
+
+```ts
+sentry: {
+  enabled?: boolean // Default: Enabled in production
+  dsn: string,
+  sdk?: SdkConfig
+}
+```
+
+App config:
+
+```ts
+sentry: {
+  sdk?: (app: NuxtApp) => SdkConfig | SdkConfig
+}
+```
+
 ## Development
 
 ```bash

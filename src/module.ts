@@ -2,14 +2,7 @@ import { type NuxtApp } from 'nuxt/app'
 import { type SentryVitePluginOptions, sentryVitePlugin } from '@sentry/vite-plugin'
 import { type Options as SentryVueOptions } from '@sentry/vue/types/types'
 import defu from 'defu'
-import {
-  addPlugin,
-  addVitePlugin,
-  createResolver,
-  defineNuxtModule,
-  resolvePath,
-  useLogger,
-} from '@nuxt/kit'
+import { addPlugin, addVitePlugin, createResolver, defineNuxtModule, useLogger } from '@nuxt/kit'
 import { type Plugin } from 'vite'
 
 export interface ModuleOptions {
@@ -19,20 +12,22 @@ export interface ModuleOptions {
   vitePlugin: SentryVitePluginOptions
 }
 
+type SentryConfig = Partial<Omit<SentryVueOptions, 'Vue' | 'app' | 'dsn'>>
+
 declare module '@nuxt/schema' {
   interface PublicRuntimeConfig {
-    sentry:
-      | undefined
-      | {
-          dsn?: string
-        }
+    sentry: {
+      dsn: string
+      enabled?: boolean
+      sdk?: SentryConfig
+    }
   }
   interface NuxtConfig {
     sentry?: ModuleOptions
   }
   interface AppConfigInput {
     sentry?: {
-      client?: (app: NuxtApp) => Partial<Omit<SentryVueOptions, 'Vue' | 'app' | 'dsn'>>
+      sdk?: (app: NuxtApp) => SentryConfig | SentryConfig
     }
   }
 }
@@ -41,7 +36,7 @@ const logger = useLogger('nuxt:sentry')
 
 export default defineNuxtModule<ModuleOptions>({
   meta: {
-    name: '@falcondev-it/nuxt-sentry',
+    name: '@binaryoverload/nuxt-sentry',
     configKey: 'sentry',
   },
 
@@ -64,11 +59,6 @@ export default defineNuxtModule<ModuleOptions>({
     } satisfies Partial<ModuleOptions>)
 
     const resolver = createResolver(import.meta.url)
-
-    const appConfigFile = await resolvePath(resolver.resolve('./runtime/app.config'))
-    nuxt.hook('app:resolve', (app) => {
-      app.configs.push(appConfigFile)
-    })
 
     nuxt.options.sourcemap.client = true
 
