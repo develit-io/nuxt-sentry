@@ -4,6 +4,12 @@ on:
   push:
     branches:
       - master
+    paths:
+      - 'src/**'
+      - 'package.json'
+      - 'README.md'
+      - 'LICENSE'
+      - '.github/workflows/publish.yml'
 
 jobs:
   publish:
