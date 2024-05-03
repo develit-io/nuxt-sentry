@@ -11,25 +11,25 @@ jobs:
     environment:
       name: npm
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - uses: pnpm/action-setup@v3
-      with:
-        version: 8
+      - uses: pnpm/action-setup@v3
+        with:
+          version: 8
 
-    - uses: actions/setup-node@v4
-      with:
-        node-version: 20
-        cache: 'pnpm'
-        registry-url: 'https://registry.npmjs.org'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+          registry-url: 'https://registry.npmjs.org'
 
-    - name: Install pnpm packages
-      run: pnpm install
-      
-    - name: Pre-Pack
-      run: pnpm run prepack
+      - name: Install pnpm packages
+        run: pnpm install -r
 
-    - name: Publish
-      run: pnpm publish --access public
-      env:
-        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Pre-Pack
+        run: pnpm run prepack
+
+      - name: Publish
+        run: pnpm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
