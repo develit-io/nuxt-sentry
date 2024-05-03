@@ -2,7 +2,7 @@
   "name": "@binaryoverload/nuxt-sentry",
   "version": "0.1.2",
   "description": "Nuxt 3 module for Sentry",
-  "repository": "https://github.com/falcondev-it/nuxt-sentry",
+  "repository": "https://github.com/binaryoverload/nuxt-sentry",
   "license": "MIT",
   "type": "module",
   "exports": {
