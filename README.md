@@ -7,18 +7,6 @@
 
 Nuxt 3 module for Sentry.
 
-- [✨ &nbsp;Release Notes](/CHANGELOG.md)
-  <!-- - [🏀 Online playground](https://stackblitz.com/github/your-org/@binaryoverload/nuxt-sentry?file=playground%2Fapp.vue) -->
-  <!-- - [📖 &nbsp;Documentation](https://example.com) -->
-
-## Features
-
-<!-- Highlight some of the features your module provide here -->
-
-- ⛰ &nbsp;Foo
-- 🚠 &nbsp;Bar
-- 🌲 &nbsp;Baz
-
 ## Quick Setup
 
 1. Add `@binaryoverload/nuxt-sentry` dependency to your project
@@ -39,6 +27,13 @@ npm install --save-dev @binaryoverload/nuxt-sentry
 ```js
 export default defineNuxtConfig({
   modules: ['@binaryoverload/nuxt-sentry'],
+  runtimeConfig: {
+    public: {
+      sentry: {
+        dsn: 'YOUR_DSN',
+      },
+    },
+  },
 })
 ```
 
