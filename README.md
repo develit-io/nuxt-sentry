@@ -8,7 +8,7 @@
 Nuxt 3 module for Sentry.
 
 - [✨ &nbsp;Release Notes](/CHANGELOG.md)
-  <!-- - [🏀 Online playground](https://stackblitz.com/github/your-org/@falcondev-it/nuxt-sentry?file=playground%2Fapp.vue) -->
+  <!-- - [🏀 Online playground](https://stackblitz.com/github/your-org/@binaryoverload/nuxt-sentry?file=playground%2Fapp.vue) -->
   <!-- - [📖 &nbsp;Documentation](https://example.com) -->
 
 ## Features
@@ -21,24 +21,24 @@ Nuxt 3 module for Sentry.
 
 ## Quick Setup
 
-1. Add `@falcondev-it/nuxt-sentry` dependency to your project
+1. Add `@binaryoverload/nuxt-sentry` dependency to your project
 
 ```bash
 # Using pnpm
-pnpm add -D @falcondev-it/nuxt-sentry
+pnpm add -D @binaryoverload/nuxt-sentry
 
 # Using yarn
-yarn add --dev @falcondev-it/nuxt-sentry
+yarn add --dev @binaryoverload/nuxt-sentry
 
 # Using npm
-npm install --save-dev @falcondev-it/nuxt-sentry
+npm install --save-dev @binaryoverload/nuxt-sentry
 ```
 
-2. Add `@falcondev-it/nuxt-sentry` to the `modules` section of `nuxt.config.ts`
+2. Add `@binaryoverload/nuxt-sentry` to the `modules` section of `nuxt.config.ts`
 
 ```js
 export default defineNuxtConfig({
-  modules: ['@falcondev-it/nuxt-sentry'],
+  modules: ['@binaryoverload/nuxt-sentry'],
 })
 ```
 
@@ -72,11 +72,11 @@ npm run release
 
 <!-- Badges -->
 
-[npm-version-src]: https://img.shields.io/npm/v/@falcondev-it/nuxt-sentry/latest.svg?style=flat&colorA=18181B&colorB=28CF8D
-[npm-version-href]: https://npmjs.com/package/@falcondev-it/nuxt-sentry
-[npm-downloads-src]: https://img.shields.io/npm/dm/@falcondev-it/nuxt-sentry.svg?style=flat&colorA=18181B&colorB=28CF8D
-[npm-downloads-href]: https://npmjs.com/package/@falcondev-it/nuxt-sentry
-[license-src]: https://img.shields.io/npm/l/@falcondev-it/nuxt-sentry.svg?style=flat&colorA=18181B&colorB=28CF8D
-[license-href]: https://npmjs.com/package/@falcondev-it/nuxt-sentry
+[npm-version-src]: https://img.shields.io/npm/v/@binaryoverload/nuxt-sentry/latest.svg?style=flat&colorA=18181B&colorB=28CF8D
+[npm-version-href]: https://npmjs.com/package/@binaryoverload/nuxt-sentry
+[npm-downloads-src]: https://img.shields.io/npm/dm/@binaryoverload/nuxt-sentry.svg?style=flat&colorA=18181B&colorB=28CF8D
+[npm-downloads-href]: https://npmjs.com/package/@binaryoverload/nuxt-sentry
+[license-src]: https://img.shields.io/npm/l/@binaryoverload/nuxt-sentry.svg?style=flat&colorA=18181B&colorB=28CF8D
+[license-href]: https://npmjs.com/package/@binaryoverload/nuxt-sentry
 [nuxt-src]: https://img.shields.io/badge/Nuxt-18181B?logo=nuxt.js
 [nuxt-href]: https://nuxt.com
