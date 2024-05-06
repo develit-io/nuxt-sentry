@@ -77,19 +77,47 @@ App config:
 ```ts
 sentry: {
   sdk?: (app: NuxtApp) => SdkConfig | SdkConfig
-  integrations?: {
-    GlobalHandlers?: boolean | GlobalHandlersOptions
-    TryCatch?: boolean | TryCatchOptions
-    Breadcrumbs?: boolean | BreadcrumbsOptions
-    LinkedErrors?: boolean | LinkedErrorsOptions
-    HttpContext?: boolean 
-    Dedupe?: boolean
-    FunctionToString?: boolean
-    InboundFilters?: boolean | InboundFiltersOptions
-    Replay?: boolean | ReplayConfiguration
-    BrowserTracing?: boolean | BrowserTracingOptions
-    BrowserProfiling?: boolean
-  }
+  integrations?: IntegrationOptions
+}
+```
+
+`IntegrationOptions`:
+
+`true` enables the integration with default options.
+`false` disables the integration.
+
+The default integrations that are enabled are:
+- Breadcrumbs
+- Dedupe
+- FunctionToString
+- GlobalHandlers
+- HttpContext
+- InboundFilters
+- LinkedErrors
+- TryCatch
+
+```ts
+{
+  breadcrumbs?: boolean | BreadcrumbsOptions, // default: true
+  browserTracing?: boolean | BrowserTracingOptions,
+  browserProfiling?: boolean,
+  captureConsole?: boolean | CaptureConsoleOptions,
+  contextLines?: boolean | ContextLinesOptions,
+  debug?: boolean | DebugOptions,
+  dedupe?: boolean, // default: true
+  extraErrorData?: boolean | ExtraErrorDataOptions,
+  functionToString?: boolean, // default: true
+  globalHandlers?: boolean | GlobalHandlersOptions, // default: true
+  httpClient?: boolean | HttpClientOptions,
+  httpContext?: boolean, // default: true
+  inboundFilters?: boolean | InboundFiltersOptions, // default: true
+  linkedErrors?: boolean | LinkedErrorsOptions, // default: true
+  moduleMetadata?: boolean,
+  replay?: boolean | ReplayConfiguration,
+  reportingObserver?: boolean | ReportingObserverOptions,
+  rewriteFrames?: boolean | RewriteFramesOptions,
+  sessionTiming?: boolean,
+  tryCatch?: boolean | TryCatchOptions, // default: true
 }
 ```
 

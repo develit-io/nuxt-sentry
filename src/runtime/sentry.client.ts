@@ -1,29 +1,16 @@
-import type { AppConfig, SentryIntegrations } from "../types"
 import type { Integration } from "@sentry/types"
 import type { Options } from "@sentry/vue/types/types"
-import type { NuxtSSRContext } from "nuxt/dist/app/nuxt"
+
+import { captureException, init, withScope } from "@sentry/vue"
+import defu from "defu"
+import { defineNuxtPlugin, useAppConfig, useRuntimeConfig } from "nuxt/app"
 
 import {
-  Breadcrumbs,
-  BrowserProfilingIntegration,
-  BrowserTracing,
-  Dedupe,
-  FunctionToString,
-  GlobalHandlers,
-  HttpContext,
-  InboundFilters,
-  LinkedErrors,
-  Replay,
-  TryCatch,
-  captureException,
-  init,
-  vueRouterInstrumentation,
-  withScope,
-} from "@sentry/vue"
-import defu from "defu"
-import { defineNuxtPlugin } from "nuxt/app"
-
-type NuxtApp = NuxtSSRContext["nuxt"]
+  type AppConfig,
+  type IntegrationOptions,
+  defaultIntegrations,
+  integrationMap,
+} from "../types"
 
 export default defineNuxtPlugin({
   enforce: "pre",
@@ -39,25 +26,22 @@ export default defineNuxtPlugin({
     const appConfig =
       typeof appSdkConfig === "function" ? appSdkConfig(nuxt.vueApp.$nuxt) : appSdkConfig
 
-    const integrationConfig: SentryIntegrations = defu(
+    const integrationConfig: IntegrationOptions = defu(
       runtimeSentryConfig.integrations,
       appSentryConfig?.integrations,
-      {
-        BrowserTracing: true,
-        Replay: true,
-      },
     )
 
-    const integrations = buildIntegrations(integrationConfig, nuxt)
+    const integrations = buildIntegrations(integrationConfig)
 
     const config: Partial<Options> = defu(runtimeSdkConfig, appConfig, {
       integrations,
+      defaultIntegrations: false,
       tracesSampleRate: 1,
       replaysSessionSampleRate: 0.1,
       replaysOnErrorSampleRate: 1,
       environment: process.dev ? "development" : "production",
       enabled,
-    })
+    } as const)
 
     init({
       app: nuxt.vueApp,
@@ -78,68 +62,33 @@ export default defineNuxtPlugin({
   },
 })
 
-function buildIntegrations(integrationConfig: SentryIntegrations, nuxt: NuxtApp) {
+function buildIntegrations(integrationConfig: IntegrationOptions) {
   const integrations: Integration[] = []
 
-  if (integrationConfig.BrowserTracing) {
-    const browserTracingConfig =
-      integrationConfig.BrowserTracing === true ? {} : integrationConfig.BrowserTracing
-    integrations.push(
-      new BrowserTracing({
-        routingInstrumentation: vueRouterInstrumentation(nuxt.vueApp.$nuxt.$router),
-        ...browserTracingConfig,
-      }),
-    )
+  for (const key of Object.keys(integrationMap)) {
+    // We need to cast here so we can pass the options to the integration - some methods don't have parameters
+    const integration = integrationMap[key as keyof typeof integrationMap] as any
+    const integrationOptions = integrationConfig[key as keyof IntegrationOptions]
+
+    if (integrationOptions === undefined) {
+      // If the integration is not configured but is a default, add it
+      if (defaultIntegrations.includes(key as keyof typeof integrationMap)) {
+        integrations.push(integration())
+        continue
+      }
+
+      continue
+    }
+
+    // If the integration is disabled, skip it
+    if (integrationOptions === false) {
+      continue
+    }
+
+    const config = integrationOptions === true ? undefined : integrationOptions
+
+    integrations.push(integration(config))
   }
 
-  if (integrationConfig.Replay) {
-    const replayConfig = integrationConfig.Replay === true ? undefined : integrationConfig.Replay
-    integrations.push(new Replay(replayConfig))
-  }
-
-  if (integrationConfig.BrowserProfiling) {
-    integrations.push(new BrowserProfilingIntegration())
-  }
-
-  if (integrationConfig.GlobalHandlers) {
-    const globalHandlersConfig =
-      integrationConfig.GlobalHandlers === true ? undefined : integrationConfig.GlobalHandlers
-    integrations.push(new GlobalHandlers(globalHandlersConfig))
-  }
-
-  if (integrationConfig.TryCatch) {
-    const tryCatchConfig =
-      integrationConfig.TryCatch === true ? undefined : integrationConfig.TryCatch
-    integrations.push(new TryCatch(tryCatchConfig))
-  }
-
-  if (integrationConfig.Breadcrumbs) {
-    const breadcrumbsConfig =
-      integrationConfig.Breadcrumbs === true ? undefined : integrationConfig.Breadcrumbs
-    integrations.push(new Breadcrumbs(breadcrumbsConfig))
-  }
-
-  if (integrationConfig.LinkedErrors) {
-    const linkedErrorsConfig =
-      integrationConfig.LinkedErrors === true ? undefined : integrationConfig.LinkedErrors
-    integrations.push(new LinkedErrors(linkedErrorsConfig))
-  }
-
-  if (integrationConfig.HttpContext) {
-    integrations.push(new HttpContext())
-  }
-
-  if (integrationConfig.Dedupe) {
-    integrations.push(new Dedupe())
-  }
-
-  if (integrationConfig.FunctionToString) {
-    integrations.push(new FunctionToString())
-  }
-
-  if (integrationConfig.InboundFilters) {
-    const inboundFiltersConfig =
-      integrationConfig.InboundFilters === true ? undefined : integrationConfig.InboundFilters
-    integrations.push(new InboundFilters(inboundFiltersConfig))
-  }
+  return integrations
 }
