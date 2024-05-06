@@ -1,6 +1,6 @@
 {
   "private": true,
-  "name": "@falcondev-it/nuxt-sentry-playground",
+  "name": "@binaryoverload/nuxt-sentry-playground",
   "type": "module",
   "scripts": {
     "dev": "nuxi dev",
@@ -8,6 +8,6 @@
     "generate": "nuxi generate"
   },
   "devDependencies": {
-    "nuxt": "latest"
+    "nuxt": "workspace:~"
   }
 }

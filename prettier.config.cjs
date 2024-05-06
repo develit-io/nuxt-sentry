@@ -3,7 +3,7 @@
 /** @type import('prettier').Config */
 module.exports = {
   semi: false,
-  singleQuote: true,
+  singleQuote: false,
   printWidth: 100,
-  htmlWhitespaceSensitivity: 'ignore',
+  htmlWhitespaceSensitivity: "ignore",
 }
