@@ -29,7 +29,7 @@ export default defineNuxtPlugin({
   enforce: "pre",
   setup(nuxt) {
     const runtimeSentryConfig = useRuntimeConfig().public.sentry
-    const appSentryConfig = useAppConfig().sentry as AppConfig
+    const appSentryConfig = useAppConfig().sentry as AppConfig | undefined
 
     const enabled = runtimeSentryConfig?.enabled ?? !process.dev
     const dsn = runtimeSentryConfig?.dsn
@@ -41,7 +41,7 @@ export default defineNuxtPlugin({
 
     const integrationConfig: SentryIntegrations = defu(
       runtimeSentryConfig.integrations,
-      appSentryConfig.integrations,
+      appSentryConfig?.integrations,
       {
         BrowserTracing: true,
         Replay: true,
