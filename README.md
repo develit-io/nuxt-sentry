@@ -45,6 +45,10 @@ The module can be configured by providing a `sentry` key in the `public` section
 
 The `sdk` object is passed directly to the Sentry SDK. It consists of the properties specified in the [Sentry documentation here](https://docs.sentry.io/platforms/javascript/configuration/options/).
 
+The `integration` object contains the properties specified in the [Sentry documentation here](https://docs.sentry.io/platforms/javascript/configuration/integrations/). For each integration, you can either pass `true` to enable it or an object to configure it. By default, the following integrations are enabled:
+- `BrowserTracing` (With the Vue integration enabled)
+- `Replay`
+
 Runtime config:
 
 ```ts
@@ -52,6 +56,19 @@ sentry: {
   enabled?: boolean // Default: Enabled in production
   dsn: string,
   sdk?: SdkConfig
+  integrations?: {
+    GlobalHandlers?: boolean | GlobalHandlersOptions
+    TryCatch?: boolean | TryCatchOptions
+    Breadcrumbs?: boolean | BreadcrumbsOptions
+    LinkedErrors?: boolean | LinkedErrorsOptions
+    HttpContext?: boolean 
+    Dedupe?: boolean
+    FunctionToString?: boolean
+    InboundFilters?: boolean | InboundFiltersOptions
+    Replay?: boolean | ReplayConfiguration
+    BrowserTracing?: boolean | BrowserTracingOptions
+    BrowserProfiling?: boolean
+  }
 }
 ```
 
@@ -60,6 +77,19 @@ App config:
 ```ts
 sentry: {
   sdk?: (app: NuxtApp) => SdkConfig | SdkConfig
+  integrations?: {
+    GlobalHandlers?: boolean | GlobalHandlersOptions
+    TryCatch?: boolean | TryCatchOptions
+    Breadcrumbs?: boolean | BreadcrumbsOptions
+    LinkedErrors?: boolean | LinkedErrorsOptions
+    HttpContext?: boolean 
+    Dedupe?: boolean
+    FunctionToString?: boolean
+    InboundFilters?: boolean | InboundFiltersOptions
+    Replay?: boolean | ReplayConfiguration
+    BrowserTracing?: boolean | BrowserTracingOptions
+    BrowserProfiling?: boolean
+  }
 }
 ```
 
