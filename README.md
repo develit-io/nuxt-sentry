@@ -46,17 +46,9 @@ That's it! You can now use Nuxt Sentry in your Nuxt app ✨
 
 The module can be configured by providing a `sentry` key in the `public` section of the `runtimeConfig` or `appConfig` in `nuxt.config.ts`.
 
-The `sdk` object is passed directly to the Sentry SDK. It consists of the properties specified in the [Sentry documentation here](https://docs.sentry.io/platforms/javascript/configuration/options/).
+The `clientSdk` object is passed directly to the Sentry SDK. It consists of the properties specified in the [Sentry documentation here](https://docs.sentry.io/platforms/javascript/configuration/options/).
 
-The `disabledIntegrations` object takes a key of the integration name and a boolean value to enable or disable the integration. The default integrations that are enabled are:
-- Breadcrumbs
-- Dedupe
-- FunctionToString
-- GlobalHandlers
-- HttpContext
-- InboundFilters
-- LinkedErrors
-- TryCatch
+The `disableIntegrations` object takes a key of the integration name and a boolean value to enable or disable the integration. [See more details here](#disabling-integrations)
 
 Runtime config:
 
@@ -65,7 +57,7 @@ sentry: {
   enabled?: boolean // Default: Enabled in production
   dsn: string,
   clientSdk?: SdkConfig
-  disabledIntegrations?: Record<string, boolean>
+  disableIntegrations?: Record<string, boolean>
 }
 ```
 
@@ -74,7 +66,6 @@ App config:
 ```ts
 sentry: {
   clientSdk?: (app: NuxtApp) => SdkConfig | SdkConfig
-  disabledIntegrations?: Record<string, boolean>
 }
 ```
 
@@ -83,7 +74,7 @@ If you would like to enable or configure specific integrations or you would like
 
 The list of integrations is deduplicated based on the `name` property of the integration so you can configure the default integrations by adding them to the list with the desired configuration.
 
-For example:
+See the example below for adding and configuring integrations:
 
 ```ts
 import { breadcrumbsIntegration } from "@sentry/vue"
@@ -105,6 +96,41 @@ defineNuxtConfig({
     },
   },
 })
+```
+
+### Disabling Integrations
+If you would like to disable specific integrations, you can do so by providing a `disabledIntegrations` object in the `runtimeConfig`. The key should be the name of the integration and the value should be a boolean to enable or disable the integration. The key is case-insensitive.
+
+The default integrations that are enabled are:
+- Breadcrumbs
+- Dedupe
+- FunctionToString
+- GlobalHandlers
+- HttpContext
+- InboundFilters
+- LinkedErrors
+- TryCatch
+
+See the example below for disabling the default Breadcrumbs integration:
+
+```ts
+defineNuxtConfig({
+  runtimeConfig: {
+    public: {
+      sentry: {
+        disabledIntegrations: {
+          Breadcrumbs: true
+        }
+      }
+    }
+  }
+})
+```
+
+or using environment variables:
+
+```bash
+NUXT_PUBLIC_SENTRY_DISABLED_INTEGRATIONS_BREADCRUMBS=true
 ```
 
 ## Development

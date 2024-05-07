@@ -64,7 +64,7 @@ export default defineNuxtPlugin({
 
 function buildIntegrations(
   configIntegrations: Integration[],
-  disableIntegrations: DisableIntegrationConfig,
+  disableIntegrationsConfig: DisableIntegrationConfig,
 ) {
   return function (sdkDefaultIntegrations: Integration[]): Integration[] {
     const defaultIntegrations: Integration[] = [vueBrowserTracingIntegration()]
@@ -75,11 +75,15 @@ function buildIntegrations(
       ...(configIntegrations ?? []),
     ]
 
+    const disabledIntegrations = Object.entries(disableIntegrationsConfig)
+      .filter(([, value]) => value === true)
+      .map(([key]) => key.toLowerCase())
+
     // Filter out duplicate integrations by their name with the latter taking precedence
     const integrationMap = {} as Record<string, Integration>
     for (const integration of resolvedIntegrations) {
       // If the integration is disabled, skip it
-      if (disableIntegrations[integration.name] === true) {
+      if (disabledIntegrations.includes(integration.name.toLowerCase()) === true) {
         continue
       }
 
