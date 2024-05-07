@@ -20,10 +20,10 @@ export default defineNuxtPlugin({
 
     const enabled = runtimeSentryConfig?.enabled ?? !process.dev
     const dsn = runtimeSentryConfig?.dsn
-    const runtimeSdkConfig = runtimeSentryConfig?.sdk
+    const runtimeSdkConfig = runtimeSentryConfig?.clientSdk
     const runtimeDisableIntegrations = runtimeSentryConfig?.disableIntegrations ?? {}
 
-    const appSdkConfig = appSentryConfig?.sdk
+    const appSdkConfig = appSentryConfig?.clientSdk
     const appConfig =
       typeof appSdkConfig === "function" ? appSdkConfig(nuxt.vueApp.$nuxt) : appSdkConfig
 

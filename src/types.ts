@@ -37,11 +37,11 @@ export interface RuntimeConfig {
   dsn: string
   enabled?: boolean
   disableIntegrations?: DisableIntegrationConfig
-  sdk?: SentryConfig
+  clientSdk?: SentryConfig
 }
 
 export interface AppConfig {
-  sdk?: SentryConfig | ((app: NuxtApp) => SentryConfig)
+  clientSdk?: SentryConfig | ((app: NuxtApp) => SentryConfig)
 }
 
 declare module "@nuxt/schema" {
