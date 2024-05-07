@@ -37,6 +37,9 @@ export default defineNuxtConfig({
 })
 ```
 
+> [!NOTE]
+> You can also use environment variables to set the DSN using `NUXT_PUBLIC_SENTRY_DSN`
+
 That's it! You can now use Nuxt Sentry in your Nuxt app ✨
 
 ## Configuration
@@ -45,9 +48,15 @@ The module can be configured by providing a `sentry` key in the `public` section
 
 The `sdk` object is passed directly to the Sentry SDK. It consists of the properties specified in the [Sentry documentation here](https://docs.sentry.io/platforms/javascript/configuration/options/).
 
-The `integration` object contains the properties specified in the [Sentry documentation here](https://docs.sentry.io/platforms/javascript/configuration/integrations/). For each integration, you can either pass `true` to enable it or an object to configure it. By default, the following integrations are enabled:
-- `BrowserTracing` (With the Vue integration enabled)
-- `Replay`
+The `disabledIntegrations` object takes a key of the integration name and a boolean value to enable or disable the integration. The default integrations that are enabled are:
+- Breadcrumbs
+- Dedupe
+- FunctionToString
+- GlobalHandlers
+- HttpContext
+- InboundFilters
+- LinkedErrors
+- TryCatch
 
 Runtime config:
 
@@ -55,20 +64,8 @@ Runtime config:
 sentry: {
   enabled?: boolean // Default: Enabled in production
   dsn: string,
-  sdk?: SdkConfig
-  integrations?: {
-    GlobalHandlers?: boolean | GlobalHandlersOptions
-    TryCatch?: boolean | TryCatchOptions
-    Breadcrumbs?: boolean | BreadcrumbsOptions
-    LinkedErrors?: boolean | LinkedErrorsOptions
-    HttpContext?: boolean 
-    Dedupe?: boolean
-    FunctionToString?: boolean
-    InboundFilters?: boolean | InboundFiltersOptions
-    Replay?: boolean | ReplayConfiguration
-    BrowserTracing?: boolean | BrowserTracingOptions
-    BrowserProfiling?: boolean
-  }
+  clientSdk?: SdkConfig
+  disabledIntegrations?: Record<string, boolean>
 }
 ```
 
@@ -76,21 +73,38 @@ App config:
 
 ```ts
 sentry: {
-  sdk?: (app: NuxtApp) => SdkConfig | SdkConfig
-  integrations?: {
-    GlobalHandlers?: boolean | GlobalHandlersOptions
-    TryCatch?: boolean | TryCatchOptions
-    Breadcrumbs?: boolean | BreadcrumbsOptions
-    LinkedErrors?: boolean | LinkedErrorsOptions
-    HttpContext?: boolean 
-    Dedupe?: boolean
-    FunctionToString?: boolean
-    InboundFilters?: boolean | InboundFiltersOptions
-    Replay?: boolean | ReplayConfiguration
-    BrowserTracing?: boolean | BrowserTracingOptions
-    BrowserProfiling?: boolean
-  }
+  clientSdk?: (app: NuxtApp) => SdkConfig | SdkConfig
+  disabledIntegrations?: Record<string, boolean>
 }
+```
+
+### Configuring Integrations
+If you would like to enable or configure specific integrations or you would like to create custom integrations, you can do so by providing a `integrations` array in the `clientSdk` object in the `appConfig`. It's important to use the `appConfig` for this as integrations are not serializable and cannot be passed through the `runtimeConfig`.
+
+The list of integrations is deduplicated based on the `name` property of the integration so you can configure the default integrations by adding them to the list with the desired configuration.
+
+For example:
+
+```ts
+import { breadcrumbsIntegration } from "@sentry/vue"
+
+defineNuxtConfig({
+  appConfig: {
+    sentry: {
+      clientSdk: {
+        integrations: [
+          // Configure the default Breadcrumbs integration
+          breadcrumbIntegration({
+            console: true,
+            // Other options
+          }),
+          // Add a custom integration
+          new MyAwesomeIntegration()
+        ],
+      },
+    },
+  },
+})
 ```
 
 ## Development
@@ -110,10 +124,6 @@ npm run dev:build
 
 # Run ESLint
 npm run lint
-
-# Run Vitest
-npm run test
-npm run test:watch
 
 # Release new version
 npm run release

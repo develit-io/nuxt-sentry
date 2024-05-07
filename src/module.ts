@@ -12,13 +12,18 @@ export default defineNuxtModule<ModuleOptions>({
   meta: {
     name: "@binaryoverload/nuxt-sentry",
     configKey: "sentry",
+    compatibility: {
+      nuxt: "^3.0.0",
+    },
   },
 
   async setup(_moduleOptions, nuxt) {
-    if (!nuxt.options.runtimeConfig.public.sentry?.dsn) {
-      logger.warn("No Sentry DSN provided. Provide it in `runtimeConfig.public.sentry.dsn`")
+    if (_moduleOptions.enabled === false) {
+      logger.warn("Sentry module is disabled")
       return
     }
+
+    logger.info("Setting up Sentry module")
 
     const moduleOptions = defu(_moduleOptions, {
       deleteSourcemapsAfterUpload: true,

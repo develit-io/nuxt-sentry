@@ -1,21 +1,35 @@
 import type { SentryVitePluginOptions } from "@sentry/vite-plugin"
-import type { BrowserTracing, Integrations, Replay } from "@sentry/vue"
 import type { Options as SentryVueOptions } from "@sentry/vue/types/types"
 import type { NuxtApp } from "nuxt/app"
 
 export type SentryConfig = Partial<Omit<SentryVueOptions, "Vue" | "app" | "dsn">>
-export type SentryIntegrations = {
-  [key in keyof typeof Integrations]?: IntegrationOptions<(typeof Integrations)[key]> | false
-} & {
-  Replay: IntegrationOptions<typeof Replay> | false
-  BrowserTracing: IntegrationOptions<typeof BrowserTracing> | false
-  BrowserProfiling: boolean
+
+export interface DisableIntegrationConfig {
+  Breadcrumbs?: boolean
+  BrowserTracing?: boolean
+  CaptureConsole?: boolean
+  ContextLines?: boolean
+  Debug?: boolean
+  Dedupe?: boolean
+  ExtraErrorData?: boolean
+  FunctionToString?: boolean
+  GlobalHandlers?: boolean
+  HttpClient?: boolean
+  HttpContext?: boolean
+  InboundFilters?: boolean
+  LinkedErrors?: boolean
+  ModuleMetadata?: boolean
+  Replay?: boolean
+  ReportingObserver?: boolean
+  RewriteFrames?: boolean
+  SessionTiming?: boolean
+  TryCatch?: boolean
+  [key: string]: boolean | undefined
 }
 
-type IntegrationOptions<T extends abstract new (...args: any) => any> =
-  ConstructorParameters<T>[0] extends infer P ? (undefined extends P ? P | true : P) : never
-
 export interface ModuleOptions {
+  /** @default true */
+  enabled?: boolean
   /** @default true */
   deleteSourcemapsAfterUpload?: boolean
   vitePlugin: SentryVitePluginOptions
@@ -24,13 +38,12 @@ export interface ModuleOptions {
 export interface RuntimeConfig {
   dsn: string
   enabled?: boolean
-  integrations?: SentryIntegrations
-  sdk?: SentryConfig
+  disableIntegrations?: DisableIntegrationConfig
+  clientSdk?: SentryConfig
 }
 
 export interface AppConfig {
-  sdk?: SentryConfig | ((app: NuxtApp) => SentryConfig)
-  integrations?: SentryIntegrations
+  clientSdk?: SentryConfig | ((app: NuxtApp) => SentryConfig)
 }
 
 declare module "@nuxt/schema" {
