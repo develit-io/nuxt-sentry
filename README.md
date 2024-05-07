@@ -37,7 +37,8 @@ export default defineNuxtConfig({
 })
 ```
 
-> !NOTE: You can also use environment variables to set the DSN using `NUXT_PUBLIC_SENTRY_DSN`
+> [!NOTE]
+> You can also use environment variables to set the DSN using `NUXT_PUBLIC_SENTRY_DSN`
 
 That's it! You can now use Nuxt Sentry in your Nuxt app ✨
 
