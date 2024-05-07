@@ -1,6 +1,6 @@
 {
   "name": "@binaryoverload/nuxt-sentry",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "Nuxt 3 module for Sentry",
   "repository": "https://github.com/binaryoverload/nuxt-sentry",
   "license": "MIT",

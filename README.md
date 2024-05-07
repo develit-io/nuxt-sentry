@@ -99,7 +99,7 @@ defineNuxtConfig({
 ```
 
 ### Disabling Integrations
-If you would like to disable specific integrations, you can do so by providing a `disabledIntegrations` object in the `runtimeConfig`. The key should be the name of the integration and the value should be a boolean to enable or disable the integration. The key is case-insensitive.
+If you would like to disable specific integrations, you can do so by providing a `disableIntegrations` object in the `runtimeConfig`. The key should be the name of the integration and the value should be a boolean to enable or disable the integration. The key is case-insensitive.
 
 The default integrations that are enabled are:
 - Breadcrumbs
@@ -118,7 +118,7 @@ defineNuxtConfig({
   runtimeConfig: {
     public: {
       sentry: {
-        disabledIntegrations: {
+        disableIntegrations: {
           Breadcrumbs: true
         }
       }
@@ -130,7 +130,7 @@ defineNuxtConfig({
 or using environment variables:
 
 ```bash
-NUXT_PUBLIC_SENTRY_DISABLED_INTEGRATIONS_BREADCRUMBS=true
+NUXT_PUBLIC_SENTRY_DISABLE_INTEGRATIONS_BREADCRUMBS=true
 ```
 
 ## Development
