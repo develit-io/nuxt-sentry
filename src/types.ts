@@ -5,29 +5,31 @@ import type { NuxtApp } from "nuxt/app"
 export type SentryConfig = Partial<Omit<SentryVueOptions, "Vue" | "app" | "dsn">>
 
 export interface DisableIntegrationConfig {
-  Breadcrumbs?: true
-  BrowserTracing?: true
-  CaptureConsole?: true
-  ContextLines?: true
-  Debug?: true
-  Dedupe?: true
-  ExtraErrorData?: true
-  FunctionToString?: true
-  GlobalHandlers?: true
-  HttpClient?: true
-  HttpContext?: true
-  InboundFilters?: true
-  LinkedErrors?: true
-  ModuleMetadata?: true
-  Replay?: true
-  ReportingObserver?: true
-  RewriteFrames?: true
-  SessionTiming?: true
-  TryCatch?: true
-  [key: string]: true | undefined
+  Breadcrumbs?: boolean
+  BrowserTracing?: boolean
+  CaptureConsole?: boolean
+  ContextLines?: boolean
+  Debug?: boolean
+  Dedupe?: boolean
+  ExtraErrorData?: boolean
+  FunctionToString?: boolean
+  GlobalHandlers?: boolean
+  HttpClient?: boolean
+  HttpContext?: boolean
+  InboundFilters?: boolean
+  LinkedErrors?: boolean
+  ModuleMetadata?: boolean
+  Replay?: boolean
+  ReportingObserver?: boolean
+  RewriteFrames?: boolean
+  SessionTiming?: boolean
+  TryCatch?: boolean
+  [key: string]: boolean | undefined
 }
 
 export interface ModuleOptions {
+  /** @default true */
+  enabled?: boolean
   /** @default true */
   deleteSourcemapsAfterUpload?: boolean
   vitePlugin: SentryVitePluginOptions
