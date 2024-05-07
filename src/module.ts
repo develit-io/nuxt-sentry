@@ -1,13 +1,7 @@
 import type { ModuleOptions } from "./types"
 import type { Plugin } from "vite"
 
-import {
-  addPlugin,
-  addTypeTemplate,
-  addVitePlugin,
-  createResolver,
-  defineNuxtModule,
-} from "@nuxt/kit"
+import { addPlugin, addVitePlugin, createResolver, defineNuxtModule } from "@nuxt/kit"
 import { useLogger } from "@nuxt/kit"
 import { type SentryVitePluginOptions, sentryVitePlugin } from "@sentry/vite-plugin"
 import defu from "defu"
@@ -59,10 +53,5 @@ export default defineNuxtModule<ModuleOptions>({
     addVitePlugin(() => sentryVitePlugin(defu(moduleOptions.vitePlugin, defaults)) as Plugin)
 
     addPlugin(resolver.resolve("./runtime/sentry.client"))
-
-    addTypeTemplate({
-      filename: "types/nuxt-sentry.d.ts",
-      src: resolver.resolve("./module.d.ts"),
-    })
   },
 })
