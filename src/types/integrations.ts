@@ -9,22 +9,22 @@
 import type { RequestInstrumentationOptions, replayIntegration } from "@sentry/vue"
 
 export interface ClientIntegrationConfig {
-  Breadcrumbs?: BreadcrumbsOptions | boolean
-  BrowserTracing?: BrowserTracingOptions | boolean
-  CaptureConsole?: CaptureConsoleOptions | boolean
-  ContextLines?: ContextLinesOptions | boolean
-  Debug?: DebugOptions | boolean
+  Breadcrumbs?: Partial<BreadcrumbsOptions> | boolean
+  BrowserTracing?: Partial<BrowserTracingOptions> | boolean
+  CaptureConsole?: Partial<CaptureConsoleOptions> | boolean
+  ContextLines?: Partial<ContextLinesOptions> | boolean
+  Debug?: Partial<DebugOptions> | boolean
   Dedupe?: boolean
-  ExtraErrorData?: ExtraErrorDataOptions | boolean
+  ExtraErrorData?: Partial<ExtraErrorDataOptions> | boolean
   FunctionToString?: boolean
-  GlobalHandlers?: GlobalHandlersOptions | boolean
-  HttpClient?: HttpClientOptions | boolean
+  GlobalHandlers?: Partial<GlobalHandlersOptions> | boolean
+  HttpClient?: Partial<HttpClientOptions> | boolean
   HttpContext?: boolean
-  InboundFilters?: InboundFiltersOptions | boolean
-  LinkedErrors?: LinkedErrorsOptions | boolean
+  InboundFilters?: Partial<InboundFiltersOptions> | boolean
+  LinkedErrors?: Partial<LinkedErrorsOptions> | boolean
   ModuleMetadata?: boolean
-  Replay?: ReplayConfiguration | boolean
-  ReportingObserver?: ReportingObserverOptions | boolean
+  Replay?: Partial<ReplayConfiguration> | boolean
+  ReportingObserver?: Partial<ReportingObserverOptions> | boolean
   SessionTiming?: boolean
   TryCatch?: boolean
 }
