@@ -76,6 +76,12 @@ export default defineNuxtPlugin({
 
     const enabled = runtimeSentryConfig?.enabled ?? !process.dev
     const dsn = runtimeSentryConfig?.dsn
+
+    if (!dsn) {
+      console.warn("Sentry DSN is not provided, Sentry will not be initialized.")
+      return
+    }
+
     const runtimeSdkConfig = runtimeSentryConfig?.clientSdk
     const runtimeIntegrations = runtimeSentryConfig?.clientIntegrations
 
