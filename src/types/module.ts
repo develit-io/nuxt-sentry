@@ -14,7 +14,7 @@ export interface SentryModuleOptions {
 }
 
 export interface SentryRuntimeConfig {
-  dsn: string
+  dsn?: string
   enabled?: boolean
   clientIntegrations?: ClientIntegrationConfig
   clientSdk?: SentryConfig
