@@ -37,7 +37,6 @@ export default defineNuxtConfig({
 })
 ```
 
-> [!NOTE]
 > You can also use environment variables to set the DSN using `NUXT_PUBLIC_SENTRY_DSN`
 
 That's it! You can now use Nuxt Sentry in your Nuxt app ✨
@@ -48,7 +47,7 @@ The module can be configured by providing a `sentry` key in the `public` section
 
 The `clientSdk` object is passed directly to the Sentry SDK. It consists of the properties specified in the [Sentry documentation here](https://docs.sentry.io/platforms/javascript/configuration/options/).
 
-The `disableIntegrations` object takes a key of the integration name and a boolean value to enable or disable the integration. [See more details here](#disabling-integrations)
+The `clientIntegrations` object takes a key of the integration name and either a boolean value or the integration configuration. [See more details here](#configuring-integrations)
 
 Runtime config:
 
@@ -57,7 +56,7 @@ sentry: {
   enabled?: boolean // Default: Enabled in production
   dsn: string,
   clientSdk?: SdkConfig
-  disableIntegrations?: Record<string, boolean>
+  clientIntegrations?: ClientIntegrationConfig
 }
 ```
 
@@ -66,43 +65,16 @@ App config:
 ```ts
 sentry: {
   clientSdk?: (app: NuxtApp) => SdkConfig | SdkConfig
+  clientIntegrations?: ClientIntegrationConfig
 }
 ```
 
 ### Configuring Integrations
-If you would like to enable or configure specific integrations or you would like to create custom integrations, you can do so by providing a `integrations` array in the `clientSdk` object in the `appConfig`. It's important to use the `appConfig` for this as integrations are not serializable and cannot be passed through the `runtimeConfig`.
-
-The list of integrations is deduplicated based on the `name` property of the integration so you can configure the default integrations by adding them to the list with the desired configuration.
-
-See the example below for adding and configuring integrations:
-
-```ts
-import { breadcrumbsIntegration } from "@sentry/vue"
-
-defineNuxtConfig({
-  appConfig: {
-    sentry: {
-      clientSdk: {
-        integrations: [
-          // Configure the default Breadcrumbs integration
-          breadcrumbIntegration({
-            console: true,
-            // Other options
-          }),
-          // Add a custom integration
-          new MyAwesomeIntegration()
-        ],
-      },
-    },
-  },
-})
-```
-
-### Disabling Integrations
-If you would like to disable specific integrations, you can do so by providing a `disableIntegrations` object in the `runtimeConfig`. The key should be the name of the integration and the value should be a boolean to enable or disable the integration. The key is case-insensitive.
+If you would like to enable or configure specific integrations, you can do so by providing a `clientIntegrations` object in either `appConfig` or `runtimeConfig`. The key should be the name of the integration and the value should be either a boolean to enable or disable the integration or an object to configure the integration.
 
 The default integrations that are enabled are:
 - Breadcrumbs
+- BrowserTracing
 - Dedupe
 - FunctionToString
 - GlobalHandlers
@@ -111,26 +83,24 @@ The default integrations that are enabled are:
 - LinkedErrors
 - TryCatch
 
-See the example below for disabling the default Breadcrumbs integration:
+See the example below for adding and configuring integrations (You can also use `runtimeConfig` for this):
 
 ```ts
+import { breadcrumbsIntegration } from "@sentry/vue"
+
 defineNuxtConfig({
-  runtimeConfig: {
-    public: {
-      sentry: {
-        disableIntegrations: {
-          Breadcrumbs: true
-        }
-      }
-    }
-  }
+  appConfig: {
+    sentry: {
+      clientIntegrations: {
+        Breadcrumbs: false, // Disable the default Breadcrumbs integration
+        Debug: {
+          stringify: true, // Configure the Debug integration
+        },
+        HttpClient: true, // Enable the HttpClient integration
+      },
+    },
+  },
 })
-```
-
-or using environment variables:
-
-```bash
-NUXT_PUBLIC_SENTRY_DISABLE_INTEGRATIONS_BREADCRUMBS=true
 ```
 
 ## Development
