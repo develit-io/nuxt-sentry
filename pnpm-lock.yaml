@@ -40,9 +40,6 @@ importers:
       '@nuxt/test-utils':
         specifier: ^3.12.1
         version: 3.12.1(h3@1.11.1)(rollup@3.29.4)(vite@5.2.11)(vue-router@4.3.2)(vue@3.4.27)
-      '@sentry-internal/tracing':
-        specifier: ^7.114.0
-        version: 7.114.0
       '@types/node':
         specifier: ^20.12.10
         version: 20.12.10
@@ -2256,6 +2253,7 @@ packages:
       '@sentry/core': 7.114.0
       '@sentry/types': 7.114.0
       '@sentry/utils': 7.114.0
+    dev: false
 
   /@sentry/babel-plugin-component-annotate@2.16.1:
     resolution: {integrity: sha512-pJka66URsqQbk6hTs9H1XFpUeI0xxuqLYf9Dy5pRGNHSJMtfv91U+CaYSWt03aRRMGDXMduh62zAAY7Wf0HO+A==}
@@ -2385,6 +2383,7 @@ packages:
     dependencies:
       '@sentry/types': 7.114.0
       '@sentry/utils': 7.114.0
+    dev: false
 
   /@sentry/integrations@7.114.0:
     resolution: {integrity: sha512-BJIBWXGKeIH0ifd7goxOS29fBA8BkEgVVCahs6xIOXBjX1IRS6PmX0zYx/GP23nQTfhJiubv2XPzoYOlZZmDxg==}
@@ -2409,12 +2408,14 @@ packages:
   /@sentry/types@7.114.0:
     resolution: {integrity: sha512-tsqkkyL3eJtptmPtT0m9W/bPLkU7ILY7nvwpi1hahA5jrM7ppoU0IMaQWAgTD+U3rzFH40IdXNBFb8Gnqcva4w==}
     engines: {node: '>=8'}
+    dev: false
 
   /@sentry/utils@7.114.0:
     resolution: {integrity: sha512-319N90McVpupQ6vws4+tfCy/03AdtsU0MurIE4+W5cubHME08HtiEWlfacvAxX+yuKFhvdsO4K4BB/dj54ideg==}
     engines: {node: '>=8'}
     dependencies:
       '@sentry/types': 7.114.0
+    dev: false
 
   /@sentry/vite-plugin@2.16.1:
     resolution: {integrity: sha512-RSIyeqFG3PR5iJsZnagQxzOhM22z1Kh9DG+HQQsfVrxokzrWKRu/G17O2MIDh2I5iYEaL0Fkd/9RAXE4/b0aVg==}
