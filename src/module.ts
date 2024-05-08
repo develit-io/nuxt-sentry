@@ -1,4 +1,4 @@
-import type { ModuleOptions } from "./types"
+import type { SentryModuleOptions } from "./types/module"
 import type { Plugin } from "vite"
 
 import { addPlugin, addVitePlugin, createResolver, defineNuxtModule } from "@nuxt/kit"
@@ -8,7 +8,7 @@ import defu from "defu"
 
 const logger = useLogger("nuxt:sentry")
 
-export default defineNuxtModule<ModuleOptions>({
+export default defineNuxtModule<SentryModuleOptions>({
   meta: {
     name: "@binaryoverload/nuxt-sentry",
     configKey: "sentry",
@@ -35,7 +35,7 @@ export default defineNuxtModule<ModuleOptions>({
           },
         },
       },
-    } satisfies Partial<ModuleOptions>)
+    } satisfies Partial<SentryModuleOptions>)
 
     const resolver = createResolver(import.meta.url)
 
