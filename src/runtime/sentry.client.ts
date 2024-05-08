@@ -1,16 +1,68 @@
+import type { BrowserTracingOptions, IntegrationConfig, Integrations } from "../types/integrations"
+import type { Entries } from "../types/util"
 import type { Integration } from "@sentry/types"
 import type { Options } from "@sentry/vue/types/types"
 
 import {
+  breadcrumbsIntegration,
+  browserApiErrorsIntegration,
+  captureConsoleIntegration,
   captureException,
+  contextLinesIntegration,
+  debugIntegration,
+  dedupeIntegration,
+  extraErrorDataIntegration,
+  functionToStringIntegration,
+  globalHandlersIntegration,
+  httpClientIntegration,
+  httpContextIntegration,
+  inboundFiltersIntegration,
   init,
+  linkedErrorsIntegration,
+  moduleMetadataIntegration,
+  replayIntegration,
+  reportingObserverIntegration,
+  sessionTimingIntegration,
   browserTracingIntegration as vueBrowserTracingIntegration,
   withScope,
 } from "@sentry/vue"
 import defu from "defu"
-import { defineNuxtPlugin, useAppConfig, useRuntimeConfig } from "nuxt/app"
+import { type NuxtSSRContext, defineNuxtPlugin, useAppConfig, useRuntimeConfig } from "nuxt/app"
 
-import { type DisableIntegrationConfig } from "../types"
+type _NuxtApp = NuxtSSRContext["nuxt"]
+
+const integrationMap: Record<Integrations, (...args: any) => any> = {
+  Breadcrumbs: breadcrumbsIntegration,
+  BrowserTracing: vueBrowserTracingIntegration,
+  CaptureConsole: captureConsoleIntegration,
+  ContextLines: contextLinesIntegration,
+  Debug: debugIntegration,
+  Dedupe: dedupeIntegration,
+  ExtraErrorData: extraErrorDataIntegration,
+  FunctionToString: functionToStringIntegration,
+  GlobalHandlers: globalHandlersIntegration,
+  HttpClient: httpClientIntegration,
+  HttpContext: httpContextIntegration,
+  InboundFilters: inboundFiltersIntegration,
+  LinkedErrors: linkedErrorsIntegration,
+  ModuleMetadata: moduleMetadataIntegration,
+  Replay: replayIntegration,
+  ReportingObserver: reportingObserverIntegration,
+  SessionTiming: sessionTimingIntegration,
+  TryCatch: browserApiErrorsIntegration,
+}
+
+const defaultIntegrations: Integrations[] = [
+  "Breadcrumbs",
+  "BrowserTracing",
+  "Debug",
+  "FunctionToString",
+  "GlobalHandlers",
+  "HttpContext",
+  "InboundFilters",
+  "LinkedErrors",
+  "TryCatch",
+]
 
 export default defineNuxtPlugin({
   enforce: "pre",
@@ -21,11 +73,14 @@ export default defineNuxtPlugin({
     const enabled = runtimeSentryConfig?.enabled ?? !process.dev
     const dsn = runtimeSentryConfig?.dsn
     const runtimeSdkConfig = runtimeSentryConfig?.clientSdk
-    const runtimeDisableIntegrations = runtimeSentryConfig?.disableIntegrations ?? {}
+    const runtimeIntegrations = runtimeSentryConfig?.clientIntegrations
 
     const appSdkConfig = appSentryConfig?.clientSdk
+    const appIntegrations = appSentryConfig?.clientIntegrations
     const appConfig =
       typeof appSdkConfig === "function" ? appSdkConfig(nuxt.vueApp.$nuxt) : appSdkConfig
+
+    const integrationConfig = defu(runtimeIntegrations, appIntegrations)
 
     const config: Partial<Options> = defu(runtimeSdkConfig, appConfig, {
       tracesSampleRate: 1,
@@ -35,12 +90,7 @@ export default defineNuxtPlugin({
       enabled,
     } as const)
 
-    const configIntegrations = config.integrations
-
-    const integrations =
-      typeof configIntegrations === "function"
-        ? config.integrations
-        : buildIntegrations(configIntegrations ?? [], runtimeDisableIntegrations)
+    const integrations = config.integrations ?? buildIntegrations(integrationConfig, nuxt)
 
     init({
       app: nuxt.vueApp,
@@ -62,34 +112,34 @@ export default defineNuxtPlugin({
   },
 })
 
-function buildIntegrations(
-  configIntegrations: Integration[],
-  disableIntegrationsConfig: DisableIntegrationConfig,
-) {
-  return function (sdkDefaultIntegrations: Integration[]): Integration[] {
-    const defaultIntegrations: Integration[] = [vueBrowserTracingIntegration()]
+function buildIntegrations(integrationConfig: IntegrationConfig, nuxtApp: _NuxtApp) {
+  const integrations: Integration[] = []
 
-    const resolvedIntegrations = [
-      ...sdkDefaultIntegrations,
-      ...defaultIntegrations,
-      ...(configIntegrations ?? []),
-    ]
+  for (const [name, options] of Object.entries(integrationConfig) as Entries<IntegrationConfig>) {
+    // If the integration is disabled, skip it
+    if (options === false) continue
 
-    const disabledIntegrations = Object.entries(disableIntegrationsConfig)
-      .filter(([, value]) => value === true)
-      .map(([key]) => key.toLowerCase())
+    // If the integration hasn't been configured and isn't a default, skip it
+    if (options == null && !defaultIntegrations.includes(name)) continue
 
-    // Filter out duplicate integrations by their name with the latter taking precedence
-    const integrationMap = {} as Record<string, Integration>
-    for (const integration of resolvedIntegrations) {
-      // If the integration is disabled, skip it
-      if (disabledIntegrations.includes(integration.name.toLowerCase()) === true) {
+    const integration = integrationMap[name as Integrations]
+    if (integration) {
+      const integrationOptions = options === true ? undefined : options
+
+      if (name === "BrowserTracing") {
+        const browserOptions = integrationOptions as BrowserTracingOptions | undefined
+        integrations.push(
+          vueBrowserTracingIntegration({
+            ...browserOptions,
+            router: nuxtApp.vueApp.$nuxt.$router,
+          }),
+        )
         continue
       }
 
-      integrationMap[integration.name] = integration
+      integrations.push(integration(options === true ? undefined : options))
     }
-
-    return Object.values(integrationMap)
   }
+
+  return integrations
 }
