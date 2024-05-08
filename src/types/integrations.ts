@@ -9,7 +9,7 @@
 import type { replayIntegration } from "@sentry/vue"
 import type { browserTracingIntegration } from "@sentry-internal/tracing"
 
-export interface IntegrationConfig {
+export interface ClientIntegrationConfig {
   Breadcrumbs?: BreadcrumbsOptions | boolean
   BrowserTracing?: BrowserTracingOptions | boolean
   CaptureConsole?: CaptureConsoleOptions | boolean
@@ -30,7 +30,7 @@ export interface IntegrationConfig {
   TryCatch?: boolean
 }
 
-export type Integrations = keyof IntegrationConfig
+export type ClientIntegrations = keyof ClientIntegrationConfig
 
 // https://github.com/getsentry/sentry-javascript/blob/develop/packages/browser/src/integrations/breadcrumbs.ts
 export interface BreadcrumbsOptions {

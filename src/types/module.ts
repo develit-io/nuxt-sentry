@@ -1,4 +1,4 @@
-import type { IntegrationConfig } from "./integrations"
+import type { ClientIntegrationConfig } from "./integrations"
 import type { SentryVitePluginOptions } from "@sentry/vite-plugin"
 import type { Options as SentryVueOptions } from "@sentry/vue/types/types"
 import type { NuxtApp } from "nuxt/app"
@@ -16,12 +16,12 @@ export interface SentryModuleOptions {
 export interface SentryRuntimeConfig {
   dsn: string
   enabled?: boolean
-  clientIntegrations?: IntegrationConfig
+  clientIntegrations?: ClientIntegrationConfig
   clientSdk?: SentryConfig
 }
 
 export interface SentryAppConfig {
-  clientIntegrations?: IntegrationConfig
+  clientIntegrations?: ClientIntegrationConfig
   clientSdk?: SentryConfig | ((app: NuxtApp) => SentryConfig)
 }
 

@@ -1,4 +1,8 @@
-import type { BrowserTracingOptions, IntegrationConfig, Integrations } from "../types/integrations"
+import type {
+  BrowserTracingOptions,
+  ClientIntegrationConfig,
+  ClientIntegrations,
+} from "../types/integrations"
 import type { Entries } from "../types/util"
 import type { Integration } from "@sentry/types"
 import type { Options } from "@sentry/vue/types/types"
@@ -31,7 +35,7 @@ import { type NuxtSSRContext, defineNuxtPlugin, useAppConfig, useRuntimeConfig }
 
 type _NuxtApp = NuxtSSRContext["nuxt"]
 
-const integrationMap: Record<Integrations, (...args: any) => any> = {
+const integrationMap: Record<ClientIntegrations, (...args: any) => any> = {
   Breadcrumbs: breadcrumbsIntegration,
   BrowserTracing: vueBrowserTracingIntegration,
   CaptureConsole: captureConsoleIntegration,
@@ -52,7 +56,7 @@ const integrationMap: Record<Integrations, (...args: any) => any> = {
   TryCatch: browserApiErrorsIntegration,
 }
 
-const defaultIntegrations: Integrations[] = [
+const defaultIntegrations: ClientIntegrations[] = [
   "Breadcrumbs",
   "BrowserTracing",
   "Debug",
@@ -112,17 +116,19 @@ export default defineNuxtPlugin({
   },
 })
 
-function buildIntegrations(integrationConfig: IntegrationConfig, nuxtApp: _NuxtApp) {
+function buildIntegrations(integrationConfig: ClientIntegrationConfig, nuxtApp: _NuxtApp) {
   const integrations: Integration[] = []
 
-  for (const [name, options] of Object.entries(integrationConfig) as Entries<IntegrationConfig>) {
+  for (const [name, options] of Object.entries(
+    integrationConfig,
+  ) as Entries<ClientIntegrationConfig>) {
     // If the integration is disabled, skip it
     if (options === false) continue
 
     // If the integration hasn't been configured and isn't a default, skip it
     if (options == null && !defaultIntegrations.includes(name)) continue
 
-    const integration = integrationMap[name as Integrations]
+    const integration = integrationMap[name as ClientIntegrations]
     if (integration) {
       const integrationOptions = options === true ? undefined : options
 
