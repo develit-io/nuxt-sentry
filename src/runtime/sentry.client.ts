@@ -125,32 +125,31 @@ export default defineNuxtPlugin({
 function buildIntegrations(integrationConfig: ClientIntegrationConfig, nuxtApp: _NuxtApp) {
   const integrations: Integration[] = []
 
-  for (const [name, options] of Object.entries(
-    integrationConfig,
-  ) as Entries<ClientIntegrationConfig>) {
+  for (const [name, integration] of Object.entries(integrationMap) as Entries<
+    typeof integrationMap
+  >) {
+    const options = integrationConfig[name]
+
     // If the integration is disabled, skip it
     if (options === false) continue
 
     // If the integration hasn't been configured and isn't a default, skip it
     if (options == null && !defaultIntegrations.includes(name)) continue
 
-    const integration = integrationMap[name as ClientIntegrations]
-    if (integration) {
-      const integrationOptions = options === true ? undefined : options
+    const integrationOptions = options === true ? undefined : options
 
-      if (name === "BrowserTracing") {
-        const browserOptions = integrationOptions as BrowserTracingOptions | undefined
-        integrations.push(
-          vueBrowserTracingIntegration({
-            ...browserOptions,
-            router: nuxtApp.vueApp.$nuxt.$router,
-          }),
-        )
-        continue
-      }
-
-      integrations.push(integration(options === true ? undefined : options))
+    if (name === "BrowserTracing") {
+      const browserOptions = integrationOptions as BrowserTracingOptions | undefined
+      integrations.push(
+        vueBrowserTracingIntegration({
+          ...browserOptions,
+          router: nuxtApp.vueApp.$nuxt.$router,
+        }),
+      )
+      continue
     }
+
+    integrations.push(integration(options === true ? undefined : options))
   }
 
   return integrations
