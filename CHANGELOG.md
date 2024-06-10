@@ -1,6 +1,10 @@
 # Changelog
 
 
+## v0.4.2
+
+[compare changes](https://github.com/develit-io/nuxt-sentry/compare/v0.4.1...v0.4.2)
+
 ## v0.4.1
 
 

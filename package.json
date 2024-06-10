@@ -1,10 +1,13 @@
 {
   "name": "@develit-io/nuxt-sentry",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "Nuxt 3 module for Sentry",
   "repository": "https://github.com/develit-io/nuxt-sentry",
   "license": "MIT",
   "type": "module",
+  "publishConfig": {
+    "access": "public"
+  },
   "exports": {
     ".": {
       "types": "./dist/types.d.ts",
